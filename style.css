@@ -1,0 +1,50 @@
+body {
+    background-color: #3b3b3b;
+    color: white;
+    font-family: Verdana, sans-serif;
+    padding: 20px;
+}
+
+h1 {
+    color: lightblue;
+    border-bottom: 1px solid white;
+}
+
+h2 {
+    color: #66ccff;
+}
+
+p {
+    font-size: 16px;
+}
+
+.highlight {
+    color: gold;
+    font-weight: bold;
+}
+
+.badge {
+    background-color: red;
+    color: white;
+    border-radius: 5px;
+    padding: 2px 5px;
+    font-size: 0.8em;
+}
+
+ul, ol {
+    margin-left: 20px;
+}
+
+.moods {
+    display: flex;
+    gap: 40px;
+    margin-top: 10px;
+}
+
+.moods div {
+    text-align: center;
+}
+
+em {
+    color: #cccccc;
+}

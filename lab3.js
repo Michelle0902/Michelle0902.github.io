@@ -12,16 +12,14 @@ const printOddNumbersOnly = (arr) =>
 printOddNumbersOnly([1,3,4,5,6,7])
 
 //c
-const printFibo = (n, a, b) => {
-    const items = [];
-    if(n>=1){items.push(a)};
-    if(n>=2){items.push(b)};
-    while(items.length<n){
-        items.push(items[items.length-1]+items[items.length-2]);
-    }
-    return items;
-}
-console.log(printFibo(6,0,1));
+const printFibo = (n, a, b) => 
+    Array.from({ length: n }).reduce((acc, _, i) => {
+      if (i === 0) return [a];
+      if (i === 1) return [...acc, b];
+      return [...acc, acc[i - 1] + acc[i - 2]];
+    }, []);
+  
+console.log("1C: ", printFibo(6,0,1));
 
 // 2. Destructuring assignment:
 let user = { name: "John", years: 30 };

@@ -1,0 +1,178 @@
+I. THE FIRST CODE SNIPPET:
+let x;
+var a = 5;
+var b = 10;
+var c = function(a, b, c) {
+    document.write(x);   
+    document.write(a);   
+    var f = function(a, b, c) {
+        b = a;           
+        document.write(b); 
+        b = c;           
+        var x = 5;       
+    }
+    f(a, b, c);          
+    document.write(b);   
+    var x = 10;          
+}
+c(8,9,10);
+document.write(b);       
+document.write(x);       
+
+The output:
+undefined
+8
+8
+9
+10
+undefined
+
+1. Global EC creation:
+Outer: null, 
+LE_Global:
+{
+  a: undefined,
+  b: undefined,
+  c: undefined
+}
+TDZ{x}
+
+2.Global EC execution:
+Outer: null
+LE_Global:
+{
+  x: undefined,
+  a: 5,
+  b: 10,
+  c: fn(a, b, c) { ... }
+}
+TDZ: {} 
+
+3.C FEC creation:
+Outer: Global
+LE_c:
+{
+  a: 8,         
+  b: 9,
+  c: 10,
+  f: undefined, 
+  x: undefined  
+}
+TDZ: {}
+
+4.C FEC execution:
+Outer: Global
+LE_c (after execution):
+{
+  a: 8,
+  b: 9,
+  c: 10,
+  f: fn(a, b, c) { ... },
+  x: 10
+}
+TDZ: {}
+
+5.F FEC creation:
+Outer: c
+LE_f:
+{
+  a: 8,
+  b: 9,
+  c: 10,
+  x: undefined  
+}
+TDZ: {}
+
+6.F FEC execution:
+Outer: c
+LE_f (after execution):
+{
+  a: 8,
+  b: 10,
+  c: 10,
+  x: 5
+}
+TDZ: {}
+
+II. THE SECOND CODE SNIPPET:
+var x = 9;
+function myFunction() {
+    return x * x;
+}
+document.write(myFunction());
+x = 5;
+document.write(myFunction()); 
+
+The output:
+81
+25
+
+1. Global EC creation:
+Outer: null
+LE_Global (Creation):
+{
+  x: undefined,
+  myFunction: function
+}
+TDZ: {}
+
+
+2.Global EC execution:
+Outer: null
+LE_Global (Execution):
+{
+  x: 5,                        
+  myFunction: function
+}
+
+3. myFunction FEC creation:
+outer: global
+LE: [{}]
+
+4. myFunction FEC execution:
+outer: global
+LE: [{}]
+
+III. THE THIRD CODE SNIPPET:
+
+var foo = 1;
+function bar() {
+    if (!foo) {
+        var foo = 10; 
+    }
+    alert(foo);
+}
+bar();
+
+The output:
+10
+
+1. Global EC creation:
+Outer: null
+LE_Global (Creation):
+{
+  foo: undefined,
+  bar: function
+}
+TDZ: {}
+
+
+2.Global EC execution:
+Outer: null
+LE_Global (Execution):
+{
+  foo: 1,                        
+  bar: function
+}
+
+3. bar FEC creation:
+outer: global
+LE: [{
+    foo: undefined
+}]
+
+4. bar FEC execution:
+outer: global
+LE: [{
+    foo: 10;
+}]

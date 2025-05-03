@@ -1,0 +1,68 @@
+QUESTION 1:
+
+    let str = "Greetings, ";
+    let user = {
+        firstName: "John",
+        lastname: "Smith",
+        display: function () {
+        console.log(str, this.firstName);
+        show("hi");
+    }
+    };
+    user.display();
+    function show(msg) {
+    console.log(msg + " " + this.lastname);
+    }
+    show.call(user, "hello");
+
+The output:
+Greetings, John
+hi undefined
+hello Smith
+
+1. GlobalEC Creation:
+{
+  outer: null,
+  this: [global object], // e.g., window in browsers
+  LE: [
+    show: function (hoisted),
+  ],
+  TDZ: { str, user }
+}
+
+2. GlobalEC Execution:
+{
+  outer: null,
+  this: [global object],
+  LE: [
+    str: "Greetings, ",
+    user: { firstName: "John", lastname: "Smith", display: function },
+    show: function
+  ]
+}
+
+3. Display FEC Creation:
+{
+  outer: GlobalEC,
+  this: user,
+  LE: [ arguments: obj ],
+  TDZ: {}
+}
+
+4.display FEC execution:
+  LE: [ arguments: obj ],
+  console.log(str, this.firstName); 
+  show("hi");     
+
+5.show FEC creation:
+  outer: GlobalEC,
+  this: [global object], 
+  LE: [ arguments: obj, msg: "hi" ],
+  TDZ: {}
+
+6.show FEC execution:
+  outer: GlobalEC,
+  LE: [ arguments: obj ],
+  this: [global object],
+  console.log(msg + " " + this.lastname);
+

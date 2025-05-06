@@ -240,7 +240,7 @@ const lib = new Exercise3();
 // Add genres
 console.log(lib.add_genre("thriller")); // true
 console.log(lib.add_genre("comedy"));   // true
-console.log(lib.add_genre("thriller")); // false (duplicate)
+console.log(lib.add_genre("thriller")); // false 
 
 // Add movies
 console.log(lib.add_movie_in_genre("thriller", { id: "1", title: "The American" })); // true
@@ -258,4 +258,4 @@ console.log(lib.get_movie_title_by_id("comedy", "1"));   // ''
 
 // Delete movie
 console.log(lib.delete_movie_by_genre_and_movie_id("thriller", "2")); // true
-console.log(lib.delete_movie_by_genre_and_movie_id("thriller", "2")); // false (already deleted)
+console.log(lib.delete_movie_by_genre_and_movie_id("thriller", "2")); // false

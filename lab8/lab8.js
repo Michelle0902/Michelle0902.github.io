@@ -57,7 +57,6 @@ async function fetchData(){
     } catch {
         console.error("error fetching data: ", error);
     }
-   
 }
 
 fetchData();

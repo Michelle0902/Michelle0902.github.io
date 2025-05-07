@@ -22,15 +22,42 @@ morning_meditation.start();
 console.log(`Start meditation`);
 
 // Question 2
-const isPrime = (n: number) => {
-    for (let i = 2, s = Math.sqrt(n); i <= s; i++)
-    if (n % i === 0) return Promise.reject(false);
-    return Promise.resolve(true);
-   };
+const isPrime = (n) => {
+    return new Promise((resolve, reject) => {
+        if (n <= 1) return reject({ prime: false }); 
+        
+        for (let i = 2, s = Math.sqrt(n); i <= s; i++) {
+            if (n % i === 0) return reject({ prime: false });
+        }
+        
+        resolve({ prime: true });
+    });
+};
    
 console.log('start');
-await isPrime(7){
-
+async function checkPrime(n) {
+    try {
+        const result = await isPrime(n);
+        console.log(result); 
+    } catch (error) {
+        console.error(error); 
+    }
 }
- ;
 console.log('end');
+checkPrime(7);
+
+// Question 3
+async function fetchData(){
+    try{
+    const response = await fetch('https://dummyjson.com/recipes');
+    const data = await response.json();
+    const names = data 
+    .recipes.map(r=>r.name);
+    console.log("names of recipes: ", names);
+    } catch {
+        console.error("error fetching data: ", error);
+    }
+   
+}
+
+fetchData();

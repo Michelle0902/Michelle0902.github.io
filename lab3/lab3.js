@@ -39,11 +39,18 @@ let libraryBooks = [
     ];
    
 const addBook = (title, author, ID) => {
-    let book = {title, author, ID};
+    const isDuplicate = libraryBooks.some(book => book.ID === ID);
+    if (isDuplicate) {
+        console.log(`Book with ID ${ID} already exists in the library ^^!`);
+        return; 
+    }
+    let book = { title, author, ID };
     libraryBooks.push(book);
-}
+    console.log(`Book "${title}" added successfully!`);
+};
 
 addBook("The art of not giving a Fuck", "abcd", 1234);
+addBook("The art", "abud", 1238);
 addBook("The art", "abud", 1238);
 
 const getTitles = (libraryBooks) => {

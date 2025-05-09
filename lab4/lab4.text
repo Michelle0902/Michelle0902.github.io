@@ -28,70 +28,80 @@ undefined
 undefined
 
 1. Global EC creation:
-Outer: null, 
+Outer: null,
+this: window
 LE_Global:
-{
+[{
   a: undefined,
   b: undefined,
   c: undefined
-}
+}]
 TDZ{x}
 
 2.Global EC execution:
 Outer: null
+this: window
 LE_Global:
-{
+[{
   x: undefined,
   a: 5,
   b: 10,
-  c: fn(a, b, c) { ... }
-}
+  c: function
+}]
 TDZ: {} 
 
 3.C FEC creation:
 Outer: Global
+this: undefined
 LE_c:
-{
+[{
+  arguments: object,
   a: 8,         
   b: 9,
   c: 10,
   f: undefined, 
   x: undefined  
-}
+}]
 TDZ: {}
 
 4.C FEC execution:
 Outer: Global
+this: undefined
 LE_c (after execution):
-{
+[{
+  arguments: object,
   a: 8,
   b: 9,
   c: 10,
-  f: fn(a, b, c) { ... },
+  f: function,
   x: 10
-}
+}]
 TDZ: {}
 
 5.F FEC creation:
 Outer: c
+this: undefined
 LE_f:
-{
+[{
+  arguments: object,
   a: 8,
   b: 9,
   c: 10,
   x: undefined  
-}
+}]
 TDZ: {}
 
 6.F FEC execution:
 Outer: c
+this: undefined
 LE_f (after execution):
-{
+[{
+  arguments: object,
   a: 8,
   b: 10,
   c: 10,
   x: 5
-}
+}]
 TDZ: {}
 
 II. THE SECOND CODE SNIPPET:
@@ -109,29 +119,56 @@ The output:
 
 1. Global EC creation:
 Outer: null
+this: window
 LE_Global (Creation):
-{
+[{
   x: undefined,
   myFunction: function
-}
+}]
 TDZ: {}
 
 
 2.Global EC execution:
 Outer: null
+this: window
 LE_Global (Execution):
-{
+[{
   x: 5,                        
   myFunction: function
-}
+}]
+TDZ: {}
 
 3. myFunction FEC creation:
 outer: global
-LE: [{}]
+this: undefined
+LE: [{
+  arguments: object,
+}]
+TDZ: {}
 
 4. myFunction FEC execution:
 outer: global
-LE: [{}]
+this: undefined
+LE: [{
+  arguments: object,
+}]
+TDZ: {}
+
+5. myFunction second call FEC creation:
+Outer: Global
+this: undefined
+LE: [{
+  arguments: object,
+}]
+TDZ: {}
+
+6. myFunction second call FEC execution:
+Outer: Global
+this: undefined
+LE: [{
+  arguments: object,
+}]
+TDZ: {}
 
 III. THE THIRD CODE SNIPPET:
 
@@ -149,30 +186,38 @@ The output:
 
 1. Global EC creation:
 Outer: null
+this: window
 LE_Global (Creation):
-{
+[{
   foo: undefined,
   bar: function
-}
+}]
 TDZ: {}
 
 
 2.Global EC execution:
 Outer: null
+this: window
 LE_Global (Execution):
-{
+[{
   foo: 1,                        
   bar: function
-}
+}]
+TDZ: {}
 
 3. bar FEC creation:
 outer: global
+this: undefined
 LE: [{
+    arguments: object,
     foo: undefined
 }]
 
 4. bar FEC execution:
 outer: global
+this: undefined
 LE: [{
+    arguments: object,
     foo: 10;
 }]
+TDZ: {} 

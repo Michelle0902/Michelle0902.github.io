@@ -1,0 +1,147 @@
+I/
+1. What is LibUV?
+
+`libuv` is a multi-platform C library that powers Node.js event-driven I/O operations. It is the core of Node.js asynchronous non-blocking I/O model.
+
+### Key Features of `libuv`
+
+1. **Event Loop**:
+
+   * Provides the **event loop** mechanism that drives **Node.js**.
+
+2. **Asynchronous I/O**:
+
+   * Handles **non-blocking** **I/O** operations like **file** reads, **network** requests, and **timers**.
+
+3. **Cross-Platform**:
+
+   * Works on **Windows**, **macOS**, and **Linux**.
+
+4. **Thread Pool**:
+
+   * Uses a **thread pool** for **expensive** blocking operations, like **file** system operations.
+
+5. **Low-Level Abstraction**:
+
+   * Provides **low-level** APIs for **networking**, **file system**, **DNS**, **timers**, and **child processes**.
+
+### Example of `libuv` Usage in Node.js
+
+```
+const fs = require('fs');
+
+console.log("Start");
+
+fs.readFile(__filename, () => {
+    console.log("File Read Completed");
+});
+
+console.log("End");
+```
+
+**Expected Output:**
+
+```
+Start
+End
+File Read Completed
+```
+
+* **Why**:
+
+  * **`fs.readFile()`** is **non-blocking** and uses **libuv** to **offload** the **file read** to a **background thread**.
+
+---
+
+2. Difference Between `setImmediate()` and `setTimeout()`
+
+### `setImmediate(f)`
+
+* Executes the **callback** on the **next** **iteration** of the **event loop**.
+* Typically used to **defer** execution until the **I/O** phase is **complete**.
+* Runs **before** any **`setTimeout()`** with **zero** delay.
+
+```
+setImmediate(() => console.log("setImmediate"));
+setTimeout(() => console.log("setTimeout"), 0);
+
+console.log("Synchronous Code");
+```
+
+**Expected Output:**
+
+```
+Synchronous Code
+setImmediate
+setTimeout
+```
+
+### `setTimeout(f, 0)`
+
+* Executes the **callback** after a **minimum** of **0 milliseconds**.
+* Still placed in the **Timers** phase of the **event loop**, so it **may** take **longer** if the **call stack** is **busy**.
+
+### Key Differences:
+
+| **Feature**         | **setImmediate()**       | **setTimeout(0)**     |
+| ------------------- | ------------------------ | --------------------- |
+| **Execution Phase** | **Check** Phase          | **Timers** Phase      |
+| **Timing**          | **Next** Event Loop Tick | **Minimum** 0ms Delay |
+| **Priority**        | **Higher** Priority      | **Lower** Priority    |
+
+---
+
+3. Difference Between `process.nextTick()` and `setImmediate()`
+
+### `process.nextTick(f)`
+
+* Executes the **callback** **before** the **event loop** continues.
+* **Higher** priority than **`setImmediate()`**.
+* Can cause **starvation** if **overused**, blocking the event loop.
+
+```
+process.nextTick(() => console.log("process.nextTick"));
+setImmediate(() => console.log("setImmediate"));
+
+console.log("Synchronous Code");
+```
+
+**Expected Output:**
+
+```
+Synchronous Code
+process.nextTick
+setImmediate
+```
+
+### `setImmediate(f)`
+
+* Executes the **callback** on the **next** **iteration** of the **event loop**, but **after** all **microtasks** (**`nextTick()`** and **`Promise.then()`**).
+
+### Key Differences:
+
+| **Feature**         | **process.nextTick()**          | **setImmediate()**     |
+| ------------------- | ------------------------------- | ---------------------- |
+| **Execution Phase** | **Microtask** Phase             | **Check** Phase        |
+| **Timing**          | **Before** Event Loop Continues | **After** Current Tick |
+| **Priority**        | **Higher**                      | **Lower**              |
+| **Starvation Risk** | **Yes**                         | **No**                 |
+
+---
+
+### When to Use Which?
+
+* Use **`process.nextTick()`** for **high-priority** tasks that must **run immediately**.
+* Use **`setImmediate()`** for **deferring** work to the **next** tick without **blocking** the event loop.
+
+II/ The output:
+nextTick1
+Promise.resolve 1
+Promise.resolve 2
+nextTick inside Promise
+this is setImmediate 1
+this is setImmediate 2
+Promise.resolve inside setImmediate 
+readablStream close event
+this is setTimeout 0s
+this is setTimeout 5s

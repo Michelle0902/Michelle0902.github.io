@@ -2,11 +2,11 @@
 Expected Order of Outputs
 
 CommonJS Module (require)
-promise 1
 nextTick 1
-setImmediate 1
+promise 1
 setTimeout 1
 there is an error. can not read from file
+setImmediate 1
 
 ES Module (import)
 promise 1
@@ -42,3 +42,100 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(3000, () => console.log('Server is running on port 3000...'));
+
+Question 3:Different File Reading Methods in Node.js
+
+1. fs.readFileSync() (Synchronous, Blocking)
+
+// Synchronous, blocks the event loop
+const fs = require("fs");
+
+try {
+const data = fs.readFileSync("./files/sample.txt", "utf-8");
+console.log("Sync Read:", data);
+} catch (err) {
+console.error("Error reading file:", err);
+}
+
+* Blocking: The event loop is paused until the file is completely read.
+* Error Handling: Requires try...catch.
+* Use Case: Small files, startup configurations.
+
+2. fs.readFile() (Asynchronous, Non-Blocking)
+
+// Asynchronous, non-blocking
+const fs = require("fs");
+
+fs.readFile("./files/sample.txt", "utf-8", (err, data) => {
+if (err) {
+console.error("Error reading file:", err);
+return;
+}
+console.log("Async Read:", data);
+});
+
+* Non-blocking: Does not block the event loop.
+* Error Handling: Requires callback function.
+* Use Case: Large files, non-blocking I/O.
+
+3. fs.promises.readFile() (Promise-Based, Non-Blocking)
+
+// Promise-based, non-blocking
+const fs = require("fs").promises;
+
+async function readFileAsync() {
+try {
+const data = await fs.readFile("./files/sample.txt", "utf-8");
+console.log("Promise Read:", data);
+} catch (err) {
+console.error("Error reading file:", err);
+}
+}
+
+readFileAsync();
+
+* Non-blocking: Uses Promises and async/await.
+* Error Handling: More concise with try...catch.
+* Use Case: Modern async patterns, cleaner code.
+
+4. fs.createReadStream() (Streaming, Non-Blocking)
+
+// Stream-based, non-blocking
+const fs = require("fs");
+
+const stream = fs.createReadStream("./files/sample.txt", { encoding: "utf-8" });
+
+stream.on("data", (chunk) => {
+console.log("Stream Read:", chunk);
+});
+
+stream.on("error", (err) => {
+console.error("Error reading file:", err);
+});
+
+stream.on("end", () => {
+console.log("Stream Read Complete");
+});
+
+* Streaming: Reads the file in chunks.
+* Non-blocking: Allows other operations while reading.
+* Error Handling: Uses event listeners.
+* Use Case: Very large files, real-time data processing.
+
+Key Differences Between Methods
+
+| Method                 | Type          | Blocking | Error Handling  | Use Case                    |
+| ---------------------- | ------------- | -------- | --------------- | --------------------------- |
+| fs.readFileSync()      | Synchronous   | Yes      | try...catch     | Small files, configuration  |
+| fs.readFile()          | Asynchronous  | No       | Callback        | General-purpose I/O         |
+| fs.promises.readFile() | Promise-Based | No       | try...catch     | Modern async patterns       |
+| fs.createReadStream()  | Streaming     | No       | Event Listeners | Large files, streaming data |
+
+When to Use Each Method
+
+| Scenario               | Recommended Method     |
+| ---------------------- | ---------------------- |
+| Small Config Files     | fs.readFileSync()      |
+| Non-blocking File Read | fs.readFile()          |
+| Modern Async Code      | fs.promises.readFile() |
+| Large File Streaming   | fs.createReadStream()  |
